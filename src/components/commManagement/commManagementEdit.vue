@@ -51,7 +51,7 @@
                   <el-form-item label="首页商品大图">
                     <el-upload
                       class="upload-demo"
-                      :action="$axios.url  + '/doc/fileUpload'"
+                      :action="$axios.url + '/doc/fileUpload'"
                       :on-preview="handlePreview"
                       :on-remove="handleRemove"
                       :on-success="successUpload"
@@ -78,20 +78,12 @@
                       >
                     </el-upload>
                   </el-form-item>
-                  <!-- <el-form-item label="选择供应商">
-                    <el-upload
-                      class="upload-demo"
-                      action=" http://vkt32z.natappfree.cc/doc/fileUpload"
-                      :on-preview="handlePreview"
-                      :on-remove="handleRemove"
-                      :file-list="supplierList.supplier"
-                      list-type="picture"
-                    >
-                      <el-button size="small" type="primary"
-                        >点击上传</el-button
-                      >
-                    </el-upload>
-                  </el-form-item> -->
+                  <el-form-item label="选择供应商">
+                    <el-input
+                      v-model="supplierList.brand"
+                      @click="dialogTable = true"
+                    ></el-input>
+                  </el-form-item>
                 </el-form>
               </el-col>
             </el-row>
@@ -124,7 +116,7 @@
                   <el-form-item label="商品详情">
                     <el-upload
                       class="upload-demo"
-                      :action="$axios.url  + '/doc/fileUpload'"
+                      :action="$axios.url + '/doc/fileUpload'"
                       :on-preview="handlePreview"
                       :on-remove="handleRemove"
                       :file-list="supplier_img_urlList"
@@ -188,8 +180,8 @@
                         >同城上门</el-radio
                       >
                       <el-radio v-model="supplierList.model" :label="1"
-                        >快递配送 </el-radio
-                      >
+                        >快递配送
+                      </el-radio>
                     </el-form-item>
                   </el-form>
                 </div>
@@ -230,6 +222,30 @@
         <el-button type="primary" @click="saveCommManagement">提交</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogTable"
+      width="30%"
+      :before-close="(dialogTable = false)"
+    >
+      <el-table :data="listData" style="width: 100%">
+        <el-table-column prop="date" label="ID名称" width="180">
+        </el-table-column>
+        <el-table-column prop="name" label="姓名" width="180">
+        </el-table-column>
+        <el-table-column prop="address" label="供应商"> </el-table-column>
+        <el-table-column prop="address" label="手机号"> </el-table-column>
+        <el-table-column prop="address" label="操作">
+          <template slot-scope="">
+            <el-button>选择</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogTable = false">取 消</el-button>
+        <el-button type="primary" @click="dialogTable = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -239,6 +255,7 @@ export default {
     return {
       dialogVisible: false,
       activeName: "first",
+      dialogTable: false,
       src: "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
       supplierList: {
         merchandiseName: "", //商品名称
@@ -264,19 +281,20 @@ export default {
         communityType: "1",
         cNumber: "", //商品编号
         supplier_img_url: "", //商品详情
-        docId:'',
-        appDocId:''
+        docId: "",
+        appDocId: "",
       },
       selected: {
-        province:"130000",
-        city:"130500",
-        area:"130523",
-        town:null
+        province: "130000",
+        city: "130500",
+        area: "130523",
+        town: null,
       },
       visibleModel: false,
       options: [],
       pictureWebList: [],
       pictureAppList: [],
+      listData: [],
       supplier_img_urlList: [],
       fileList: [
         {
@@ -308,7 +326,7 @@ export default {
       console.log(file);
     },
     regionChange(data) {
-      // 
+      //
       this.supplierList.province = this.selected.province;
       this.supplierList.city = this.selected.city;
       this.supplierList.area = this.selected.area;
@@ -330,48 +348,42 @@ export default {
 
       // this.pictureWebList = JSON.parse(this.supplierList.pictureWeb);
       //     this.pictureAppList = JSON.parse(this.supplierList.pictureApp);
-      this.supplierList.categoryId = this.supplierList.categoryId.split(',')
-      // 
-      this.selected.province  =  this.supplierList.province
-      this.selected.city  = this.supplierList.city
-      this.selected.area  =  this.supplierList.area
+      this.supplierList.categoryId = this.supplierList.categoryId.split(",");
+      //
+      this.selected.province = this.supplierList.province;
+      this.selected.city = this.supplierList.city;
+      this.selected.area = this.supplierList.area;
       // this.supplierList.model = this.supplierList.model == 0?'true':'false'
-      this.pictureWebList = []
-      this.pictureAppList = []
-      this.supplier_img_urlList = []
-      
+      this.pictureWebList = [];
+      this.pictureAppList = [];
+      this.supplier_img_urlList = [];
+
       if (this.supplierList.pictureWeb)
-      // debugger
- 
-        this.supplierList.pictureWeb
-          .split("','")
-          .map((item) => {
-            let name = item.split("/");
-            this.pictureWebList.push({
-              name: name[name.length],
-              url: this.$axios.url  + item,
-            });
+        // debugger
+
+        this.supplierList.pictureWeb.split("','").map((item) => {
+          let name = item.split("/");
+          this.pictureWebList.push({
+            name: name[name.length],
+            url: this.$axios.url + item,
           });
+        });
       if (this.supplierList.pictureApp)
-        this.supplierList.pictureApp
-          .split("','")
-          .map((item) => {
-            let name = item.split("/");
-            this.pictureAppList.push({
-              name: name[name.length],
-              url: this.$axios.url  + item,
-            });
+        this.supplierList.pictureApp.split("','").map((item) => {
+          let name = item.split("/");
+          this.pictureAppList.push({
+            name: name[name.length],
+            url: this.$axios.url + item,
           });
+        });
       if (this.supplierList.supplier_img_url)
-        this.supplierList.supplier_img_url
-          .split("','")
-          .map((item) => {
-            let name = item.split("/");
-            this.supplier_img_urlList.push({
-              name: name[name.length],
-              url: this.$axios.url  + item,
-            });
+        this.supplierList.supplier_img_url.split("','").map((item) => {
+          let name = item.split("/");
+          this.supplier_img_urlList.push({
+            name: name[name.length],
+            url: this.$axios.url + item,
           });
+        });
 
       // this.supplierList.pictureApp = item.response.data.pkFid;
 
@@ -407,14 +419,14 @@ export default {
         communityType: "1",
         cNumber: "", //商品编号
         supplier_img_url: "", //商品详情
-        docId:'',
-        appDocId:''
-
+        docId: "",
+        appDocId: "",
       };
-      this.pictureWebList = []
-      this.pictureAppList = []
-      this.supplier_img_urlList = []
+      this.pictureWebList = [];
+      this.pictureAppList = [];
+      this.supplier_img_urlList = [];
     },
+    //新增商品信息
     //新增商品信息
     saveCommManagement() {
       // this.supplierList.pictureWeb = JSON.stringify(this.pictureWebList)
@@ -485,15 +497,15 @@ export default {
     successUpload(response, file, fileLis) {
       if (response.code == 200) {
         this.pictureWebList = fileLis;
-        // 
+        //
         // if(this.supplierList.docId && this.supplierList.docId.length > 0){
         //   this.supplierList.docId = this.supplierList.docId + ',' + file.response.data.pkFid
         // }else{
         //   this.supplierList.docId = ''
         //   this.supplierList.docId = this.supplierList.docId  + file.response.data.pkFid
         // }
-         
-        // this.supplierList.appDocId = 
+
+        // this.supplierList.appDocId =
 
         // this.pictureWeb = this.pictureWeb + file.response.data.pkFid
       }
@@ -527,6 +539,11 @@ export default {
             label: item,
           });
         });
+      }
+    });
+    this.$apiFun.querySupplierManageAllAdmin("").then((res) => {
+      if (res.code == 200) {
+        this.listData = res.data;
       }
     });
   },

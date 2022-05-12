@@ -16,6 +16,14 @@ apiFun.getAllAndroidPlugins= function(page,pageSize,supplierName) {
     params: { page: page,pageSize:pageSize,supplierName:supplierName}
   })
 }
+//供应商修改
+apiFun.updateSupplierManage= function(data) {
+  return Service({
+    url: 'supplier-manage/updateSupplierManage',
+    method: 'post',
+    data:JSON.stringify(data)
+  })
+}
 apiFun.queryCommodityAll = function(page,pageSize,merchandiseName){
   return Service({
     url: 'commodity/queryCommodityAll',
@@ -31,6 +39,17 @@ apiFun.queryCommodity = function(cNumber){
     params: { cNumber:cNumber}
   })
 }
+//商品管理选择供应商
+//
+apiFun.querySupplierManageAllAdmin = function(supplierName){
+  return Service({
+    url: 'supplier-manage/querySupplierManageAllAdmin',
+    method: 'get',
+    params: { supplierName:supplierName}
+  })
+}
+
+
 //查询商品分类类别
 
 apiFun.queryCommodityClass = function(){
@@ -107,4 +126,6 @@ apiFun.addOrUpdateList = function(data) {
     data:JSON.stringify(data)
   })
 }
+
+
 export default apiFun;

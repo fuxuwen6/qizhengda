@@ -44,7 +44,7 @@
       >
       </el-pagination>
     </el-main>
-    <supplierTableEdit ref="edit" ></supplierTableEdit>
+    <supplierTableEdit ref="edit" @search="handleTable"></supplierTableEdit>
   </el-container>
 </template>
 <script>

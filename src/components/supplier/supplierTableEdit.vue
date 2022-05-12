@@ -55,10 +55,11 @@
                   <el-form-item label="供应商图片">
                     <el-upload
                       class="upload-demo"
-                      action="https://jsonplaceholder.typicode.com/posts/"
+                      :action="$axios.url  + '/doc/fileUpload'"
                       :on-preview="handlePreview"
                       :on-remove="handleRemove"
-                      :file-list="supplierList.supplierImgUrl"
+                      :file-list="supplier_img_urlList"
+                      :on-success="successUpload"
                       list-type="picture"
                     >
                       <el-button size="small" type="primary">点击上传</el-button>
@@ -148,7 +149,7 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">返回列表</el-button>
-        <el-button type="primary" @click="dialogVisible = false">提交</el-button>
+        <el-button type="primary" @click="saveCommManagement">提交</el-button>
       </span>
     </el-dialog>
   </div>
@@ -171,13 +172,10 @@ export default {
         manageDesc: "",
         supplierInfo: "",
         supplierImgUrl: "",
-        collectTime: "",
-        mark: "",
-        ctime: "",
-        utime: "",
-        cperson: "",
-        uperson: "",
+        account:'',
+        pswd:''
       },
+      supplier_img_urlList:[],
       options: [
       ],
       value1: [],
@@ -209,6 +207,11 @@ export default {
     regionChange(data) {
       console.log(data);
     },
+    successUpload(response, file, fileLis) {
+      if (response.code == 200) {
+        this.supplier_img_urlList = fileLis;
+      }
+    },
     openEdit(row){
       this.dialogVisible = true;
       Object.keys(this.supplierList).forEach(item => {
@@ -219,7 +222,40 @@ export default {
           ? { ...row[item] }
           : row[item];
       });
-    }
+    },
+    saveCommManagement() {
+      debugger
+      let arr = []
+      this.supplier_img_urlList.map((item) => {
+        if (item && item.response) {
+          arr.push(item.response.data.pkFid);
+        }
+      });
+      if(this.supplierList.supplierImgUrl && arr){
+        this.supplierList.supplierImgUrl = this.supplierList.supplierImgUrl + ',' +  arr.toString();
+      }else if(arr[1]){
+        this.supplierList.supplierImgUrl =    arr.toString();
+      }
+      
+      if(this.supplierList.classId) this.supplierList.classId = this.supplierList.classId.toString();
+      if (this.supplierList.id) {
+        this.$apiFun.updateSupplierManage(this.supplierList).then((res) => {
+          if (res.code == "200") {
+            console.log(res);
+            this.$message.success('保存成功');
+            this.$emit('search')
+          }
+        });
+      } else {
+        // this.$apiFun.addCommodity(this.supplierList).then((res) => {
+        //   if (res.code == "200") {
+        //     console.log(res);
+        //     this.$message.success('保存成功');
+        //     this.$emit('search')
+        //   }
+        // });
+      }
+    },
   }
 };
 </script>
