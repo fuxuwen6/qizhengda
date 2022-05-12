@@ -88,8 +88,8 @@
                     >审核拒绝</el-button>
                     <el-button
                       type="text"
-                      icon="el-icon-delete"
-                      class="red"
+                      icon="el-icon-delete"  
+                      class="red" 
                       @click="handleDelete(scope.$index, scope.row)"
                     >审核通过</el-button>
                   </template>
