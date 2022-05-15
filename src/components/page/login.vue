@@ -50,10 +50,10 @@ export default {
            sessionStorage.setItem('user',JSON.stringify(res.data.user) )
             this.$router.push("/");
          }else{
-           
+          //  this.$router.push("/");
          }
        })
-      // this.$router.push("/");
+      this.$router.push("/");
      }
   },
 };

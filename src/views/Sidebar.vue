@@ -45,7 +45,7 @@ export default {
         url:'/components/demandManagement/demandManagementList'
       },{
         name:'交易担保管理',
-        url:''
+        url:'/components/tradingGuarantee/tradingGuaranteeList'
       },{
         name:'企政圈管理',
         url:''

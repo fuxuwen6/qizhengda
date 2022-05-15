@@ -8,7 +8,7 @@
         class="demo-form-inline"
       >
         <el-form-item>
-          <el-input v-model="formInline.user" placeholder="订单编号"></el-input>
+          <el-input v-model="formInline.orderCode" placeholder="订单编号"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -63,8 +63,8 @@ export default {
   data() {
     return {
       formInline: {
-        user: "",
-        region: ""
+        orderCode: null,
+        orderType: null
       },
       activeName: "first",
       pkUid: "",
@@ -80,11 +80,22 @@ export default {
     },
 
     handleEdit(index, row) {
-      this.$refs.edit.openEdit(row);
+      // debugger
+      this.$apiFun.queryOrder(row.pkOid).then(res => {
+        // debugger
+        this.$refs.edit.openEdit(res.data);
+      })
+      
     },
     //切换table标签
     handleClick(tab, event) {
-      console.log(tab, event);
+      if(tab.index == 0){
+        this.formInline.orderType = null
+      }else{
+        this.formInline.orderType = tab.index
+      }
+        
+        this.handleTable()
     },
     handleDelete(i, row) {
       // apiFun.updateCodeList
@@ -98,7 +109,9 @@ export default {
       });
     },
     handleTable() {
-      this.$apiFun.handleOrderList(this.currentPage1, 20).then(res => {
+      this.$apiFun.handleOrderList(
+        {pageNo:this.currentPage1,pageSize: 20,orderCode:this.formInline.orderCode,orderType:this.formInline.orderType}
+        ).then(res => {
         // console.log(res.data);
         if (res.code == 200) {
           this.tableData = res.data.list;

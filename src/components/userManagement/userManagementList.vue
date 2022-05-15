@@ -59,7 +59,7 @@
             >
             <!-- <el-button
               class="red" type="text"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="addOrUpdate(scope.$index, scope.row)"
               >修改分销码</el-button
             > -->
           </template>
@@ -102,16 +102,35 @@ export default {
     },
 
     handleEdit(index, row) {
-      this.$apiFun.userDetail(row.pkUid).then((res) => {
+      
+      this.$apiFun.userDetail(row.pkUids).then((res) => {
         if (res.code == 200) {
           this.$refs.edit.openEdit(res.data,row.pkUid)
         }
       });
     },
-
+    //修改分销吗
+    // addOrUpdate(index, row){
+    // this.$apiFun.addOrUpdateASS({
+    //       urlMethod:'update',
+    //       cPerson:row.cpersons,
+    //       code:row.code,
+    //     }).then((res) => {
+    //     if (res.code == 200) {
+    //       this.$refs.edit.openEdit(res.data,row.pkUid)
+    //     }
+    //   });
+    // },
     handleDelete(i,row) {
+      
       // apiFun.updateCodeList
-      this.$apiFun.updateCodeList({pkUid:row.pkUid}).then((res) => {
+      this.$apiFun.updateCodeList(
+        {
+          pkUids:row.pkUids,
+          cPerson:row.cpersons,
+          cTime:row.ctimes,
+        }
+        ).then((res) => {
         // console.log(res.data);
         if (res.code == 200) {
           this.$message.success('修改成功')

@@ -9,7 +9,6 @@
       fullscreen
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="handleClose"
       custom-class="dialog-no-header"
     >
       <div class="edit_header">当前位置:编辑商品</div>
@@ -81,7 +80,7 @@
                   <el-form-item label="选择供应商">
                     <el-input
                       v-model="supplierList.brand"
-                      @click="dialogTable = true"
+                      @click.native="dialogTable = true"
                     ></el-input>
                   </el-form-item>
                 </el-form>
@@ -225,19 +224,19 @@
     <el-dialog
       title="提示"
       :visible.sync="dialogTable"
-      width="30%"
-      :before-close="(dialogTable = false)"
+      :modal-append-to-body="false"
+      width="1072px"
     >
       <el-table :data="listData" style="width: 100%">
-        <el-table-column prop="date" label="ID名称" width="180">
+        <el-table-column prop="supplierId" label="ID名称" width="180">
         </el-table-column>
-        <el-table-column prop="name" label="姓名" width="180">
-        </el-table-column>
-        <el-table-column prop="address" label="供应商"> </el-table-column>
-        <el-table-column prop="address" label="手机号"> </el-table-column>
+        <!-- <el-table-column prop="account" label="姓名" width="180">
+        </el-table-column> -->
+        <el-table-column prop="supplierName" label="供应商"> </el-table-column>
+        <el-table-column prop="supplierPhone" label="手机号"> </el-table-column>
         <el-table-column prop="address" label="操作">
-          <template slot-scope="">
-            <el-button>选择</el-button>
+          <template slot-scope="scope">
+            <el-button type="primary" @click="changeBran(scope.row)">选择</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -336,6 +335,10 @@ export default {
       this.dialogVisible = true;
       Object.keys(this.supplierList).forEach((item) => {
         // ;
+        // console.log(this.supplierList)
+        // console.log(this.supplierList[item])
+        
+        // debugger
         this.supplierList[item] = Array.isArray(row[item])
           ? row[item].map((t) => ({ ...t }))
           : row[item] && typeof row[item] === "object"
@@ -528,6 +531,11 @@ export default {
         this.supplier_img_urlList = fileLis;
       }
     },
+    //寻择供应商
+    changeBran(row){
+      this.supplierList.brand = row.supplierName
+      this.dialogTable = false
+    }
   },
   mounted() {
     this.$apiFun.queryCommodityClass().then((res) => {
@@ -544,6 +552,7 @@ export default {
     this.$apiFun.querySupplierManageAllAdmin("").then((res) => {
       if (res.code == 200) {
         this.listData = res.data;
+        console.log(res.data)
       }
     });
   },

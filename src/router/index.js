@@ -75,6 +75,15 @@ const routes = [
       },
       name: '需求管理'
       
+    },{
+      path: '/components/tradingGuarantee/tradingGuaranteeList',
+      component: resolve => require(['../components/tradingGuarantee/tradingGuaranteeList'], resolve),
+      meta: {
+        title: '交易担保管理',
+        idj: ''
+      },
+      name: '交易担保管理'
+      
     }
     
   ]

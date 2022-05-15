@@ -27,11 +27,11 @@
           width="80"
         ></el-table-column>
         <el-table-column
-          prop="merchandiseName"
+          prop="realName"
           label="姓名"
           width="100"
         ></el-table-column>
-        <el-table-column prop="address" align="center"  label="手机号"></el-table-column>
+        <el-table-column prop="telPhone" align="center"  label="手机号"></el-table-column>
         <el-table-column prop="status" align="center"  label="分销二维码"></el-table-column>
          <el-table-column prop="status" align="center"  label="分销码"></el-table-column>
          <el-table-column prop="status" align="center"  label="已提现"></el-table-column>
@@ -94,11 +94,12 @@ export default {
 
     handleDelete() {},
     handleTable() {
-      this.$apiFun.queryCommodityAll(this.currentPage1, 20, this.formInline.user).then((res) => {
+      this.$apiFun.selectCode().then((res) => {
         // console.log(res.data);
         if (res.code == 200) {
+          // debugger
           this.tableData = res.data.list;
-          this.totalrecord = res.data.total;
+          // this.totalrecord = res.data.total;
         }
       });
     },

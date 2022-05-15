@@ -73,7 +73,12 @@ export default {
 
 
     handleEdit(i,row){
-      this.$refs.edit.openEdit(row)
+      this.$apiFun.querySupplierManageInfo(row.id).then(res => {
+        if(res.code == 200){
+          this.$refs.edit.openEdit(res.data)
+        }
+      })
+      
       // this.$refs.edit.dialogVisible = true
     },
 

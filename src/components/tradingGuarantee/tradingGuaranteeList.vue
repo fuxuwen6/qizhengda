@@ -8,10 +8,10 @@
         class="demo-form-inline"
       >
         <el-form-item>
-          <el-input v-model="formInline.name" placeholder="姓名"></el-input>
+          <el-input v-model="formInline.firstPartyName" placeholder="姓名"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="formInline.phone" placeholder="手机号"></el-input>
+          <el-input v-model="formInline.firstPartyPhone" placeholder="手机号"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="handleTable">搜索</el-button>
@@ -24,38 +24,41 @@
         <el-table-column
           type="index"
           label="序号"
-          width="80"
+          width="180"
         ></el-table-column>
         <el-table-column
-          prop="name"
-          label="姓名"
-          width="100"
+          prop="merchandiseName"
+          label="商品名称"
+          width="180"
         ></el-table-column>
-        <el-table-column prop="phone" align="center"  label="手机号"></el-table-column>
-        <el-table-column prop="companyName" align="center"  label="公司名称"></el-table-column>
-         <el-table-column prop="status" align="center"  label="上级分销码"></el-table-column>
-         <el-table-column prop="address" align="center"  label="公司地址"></el-table-column>
-         <el-table-column prop="status" align="center"  label="职务"></el-table-column>
-         <el-table-column prop="status" align="center"  label="历史订单数"></el-table-column>
-        <el-table-column prop="address" label="操作" align="center" width="380">
+        <el-table-column prop="address" label="商品价格"></el-table-column>
+        <el-table-column prop="status" label="库存"></el-table-column>
+        <el-table-column prop="date" label="上架状态">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
-              >查看</el-button
+            {{ scope.row.status ? "上架" : "下架" }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="date" label="服务方式">
+          <template slot-scope="scope">
+            <el-button @click="handleEdit(scope.$index, scope.row)"
+              >服务上门</el-button
             >
             <el-button
-              class="red" type="text"
+              class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              >禁言</el-button
+              >快递配送</el-button
+            >
+          </template>
+        </el-table-column>
+        <el-table-column prop="address" label="操作">
+          <template slot-scope="scope">
+            <el-button @click="handleEdit(scope.$index, scope.row)"
+              >编辑</el-button
             >
             <el-button
-              class="red" type="text"
+              class="red"
               @click="handleDelete(scope.$index, scope.row)"
-              >开通分销员权限</el-button
-            >
-            <el-button
-              class="red" type="text"
-              @click="handleDelete(scope.$index, scope.row)"
-              >修改分销码</el-button
+              >删除</el-button
             >
           </template>
         </el-table-column>
@@ -68,21 +71,28 @@
         :page-size="20"
       >
       </el-pagination>
+      <!-- <el-pagination
+        @current-change="handleCurrentPageChange"
+        layout="prev, pager, next"
+        :total="pageInfo.totalCount"
+        :page-size="pageInfo.pageSize"
+      ></el-pagination>-->
     </el-main>
-    <demandManagementEdit ref="edit"></demandManagementEdit>
+    <tradingGuaranteeEdit ref="edit" @search="handleTable"></tradingGuaranteeEdit>
   </el-container>
 </template>
 <script>
-import demandManagementEdit from "./demandManagementEdit.vue";
+import tradingGuaranteeEdit from "./tradingGuaranteeEdit.vue";
+
 export default {
   components: {
-    demandManagementEdit,
+    tradingGuaranteeEdit,
   },
   data() {
     return {
       formInline: {
-        name: "",
-        phone: "",
+        firstPartyName: null,
+        firstPartyPhone: null,
       },
       tableData: [],
       totalrecord: 0,
@@ -96,20 +106,19 @@ export default {
     },
 
     handleEdit(index, row) {
-      debugger
-      this.$apiFun.queryDemand(row.id).then(res => {
-        console.log(res)
-        // this.$refs.edit.dialogVisible = true
-      })
-      
+      this.$apiFun.queryCommodity(row.cNumber).then((res) => {
+        if (res.code == 200) {
+          console.log(res);
+          this.$refs.edit.openEdit(res.data,row.cNumber);
+        }
+      });
     },
 
     handleDelete() {},
     handleTable() {
-      this.$apiFun.queryDemandAll(this.currentPage1, 20, this.formInline.name,this.formInline.phone).then((res) => {
+      this.$apiFun.selectCode(this.currentPage1, 20, this.formInline.firstPartyName, this.formInline.firstPartyPhone).then((res) => {
         // console.log(res.data);
         if (res.code == 200) {
-          debugger
           this.tableData = res.data.list;
           this.totalrecord = res.data.total;
         }

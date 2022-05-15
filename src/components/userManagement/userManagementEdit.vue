@@ -37,11 +37,11 @@
         <el-col :span="20" style="margin-left:80px">
           <el-table :data="tableData" style="width: 100%">
             <el-table-column type="index" label="序号" width="80"></el-table-column>
-            <el-table-column prop="merchandiseName" label="商品名称" width="100"></el-table-column>
-            <el-table-column prop="address" align="center" label="商品价格"></el-table-column>
-            <el-table-column prop="status" align="center" label="订单数量"></el-table-column>
-            <el-table-column prop="status" align="center" label="订单号"></el-table-column>
-            <el-table-column prop="status" align="center" label="收款人信息"></el-table-column>
+            <el-table-column prop="orderName" label="商品名称" width="100"></el-table-column>
+            <el-table-column prop="price" align="center" label="商品价格"></el-table-column>
+            <el-table-column prop="number" align="center" label="订单数量"></el-table-column>
+            <el-table-column prop="orderCode" align="center" label="订单号"></el-table-column>
+            <el-table-column prop="uperson" align="center" label="收款人信息"></el-table-column>
           </el-table>
         </el-col>
       </el-row>
@@ -60,39 +60,46 @@ export default {
       dialogVisible: false,
       tableData: [],
       form: {
-        nickname: "", 
-        telPhone: "", 
-        pswd: "", 
-        docId: "", 
-        userType: "", 
-        company: "", 
-        preCode: "", 
-        urlMethod: "update", 
+        account: "", 
         code: "", 
-        // pkUid: "", 
-        // account: "", 
-        // userOrder: "", 
-        // realName: "", 
-        // email: "", 
-        // idCard: "", 
-        // lastLoginTime: "", 
-        // status: "", 
-        // companyName: "", 
-        // qrCode: "", 
+        company: "", 
+        companyName: "", 
+        cpersons: "", 
+        ctimes: "", 
+        docId: "", 
+        email: "update", 
+        idCard: "", 
+        lastLoginTime: "", 
+        marks: "", 
+        nickname: "", 
+        orderCount: "", 
+        pkRid: "", 
+        pkUids: "", 
+        preCode: "", 
+        pswd: "", 
+        qrCode: "", 
+        realName: "", 
+        status:  "", 
+telPhone: "", 
+uperson: "", 
+userOrder: "", 
+userType: "", 
+utime: "", 
       }
     };
   },
   methods: {
     handleClose(done) {},
     openEdit(row, id) {
+      this.tableData = row.order
       this.dialogVisible = true;
       Object.keys(this.form).forEach(item => {
         // debugger;
-        this.form[item] = Array.isArray(row[item])
-          ? row[item].map(t => ({ ...t }))
-          : row[item] && typeof row[item] === "object"
-          ? { ...row[item] }
-          : row[item];
+        this.form[item] = Array.isArray(row.user[item])
+          ? row.user[item].map(t => ({ ...t }))
+          : row.user[item] && typeof row.user[item] === "object"
+          ? { ...row.user[item] }
+          : row.user[item];
       });
       this.form.pkUid = id;
       this.form.urlMethod = "update"
@@ -126,7 +133,7 @@ export default {
     //新增商品信息
     saveCommManagement() {
       // if (this.form.cNumber) {
-        this.$apiFun.updateUserList(this.form).then(res => {
+        this.$apiFun.addOrUpdateASS(this.form).then(res => {
           if (res.code == "200") {
             console.log(res);
             this.$message.success("保存成功");

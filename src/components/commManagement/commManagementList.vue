@@ -107,7 +107,7 @@ export default {
       this.$apiFun.queryCommodity(row.cNumber).then((res) => {
         if (res.code == 200) {
           console.log(res);
-          this.$refs.edit.openEdit(res.data[0],row.cNumber);
+          this.$refs.edit.openEdit(res.data,row.cNumber);
         }
       });
     },

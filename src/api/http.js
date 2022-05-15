@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Message, Loading } from 'element-ui'
-const ConfigBaseURL = 'http://qmb25d.natappfree.cc/' //默认路径，这里也可以使用env来判断环境
+const ConfigBaseURL = 'http://5y01u08803.qicp.vip/' //默认路径，这里也可以使用env来判断环境
 let loadingInstance = null //这里是loading
 //使用create方法创建axios实例
 export const Service = axios.create({
@@ -11,7 +11,7 @@ export const Service = axios.create({
     'Content-Type': 'application/json;charset=UTF-8'
   }
 })
-Service.url = 'http://qmb25d.natappfree.cc'
+Service.url = 'http://5y01u08803.qicp.vip'
 // 添加请求拦截器
 Service.interceptors.request.use(config => {
   loadingInstance = Loading.service({
