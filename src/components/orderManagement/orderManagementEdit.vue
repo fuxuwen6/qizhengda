@@ -151,7 +151,7 @@
             </el-col>
             <el-col :span="24" v-if="model == 0">
               <el-form-item label="上门时间">
-                <el-input v-model="OrderModelList.visitDatetime" placeholder="上门时间"></el-input>
+                <el-input v-model="OrderModelList.visit_datetime" placeholder="上门时间"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24" v-if="model == 0">
@@ -284,16 +284,17 @@ export default {
       value2: [],
       OrderModelList:{
         orderId:'',
-        cNumber:'',
+        cnumber:'',
         modelType:'',
         expressage:'',
         expressageCompany:'',
         remarkone:'',
         servepeople:'',
         phone:'',
-        visitDatetime:'',
+        visit_datetime:'',
         remarktwo:'',
          urlMethod:'',
+         id:''
       }
     };
   },
@@ -324,16 +325,32 @@ export default {
       
       if(i == 1){
         this.visibleModel = true;
-        this.OrderModelList.cNumber = row.cnumber
-        this.OrderModelList.modelType =  row.model
-        this.OrderModelList.orderId = JSON.parse(sessionStorage.getItem('user')).pkUids
-        this.$apiFun.queryOrderModel(row.cnumber,row.model).then(res =>{
-          if(res.data == 200 && res.data){
+        // this.OrderModelList.cNumber = row.cnumber
+        // this.OrderModelList.modelType =  row.model
+        // this.OrderModelList.orderId = this.supplierList.orderCode
+        this.$apiFun.queryOrderModel(row.cnumber,this.supplierList.orderCode).then(res =>{
+          
+          if(res.code == 200 && res.data){
             
+            Object.keys(this.OrderModelList).forEach(item => {
+              // ;
+              this.OrderModelList[item] = Array.isArray(res.data[item])
+                ? res.data[item].map(t => ({ ...t }))
+                : res.data[item] && typeof res.data[item] === "object"
+                ? { ...res.data[item] }
+                : res.data[item];
+            });
+            this.OrderModelList.urlMethod = "update"
+          }else{
+            this.OrderModelList.urlMethod = "add"
           }
         })
+        
+        this.OrderModelList.cnumber = row.cnumber
+        this.OrderModelList.modelType =  row.model
+        this.OrderModelList.orderId = this.supplierList.orderCode
       }else{
-        debugger
+        // 
         this.supplierList.orderType = i + 1
       }
       this.model = row.model
@@ -363,24 +380,25 @@ export default {
       // this.$apiFun.addOrUpdateModel(this.OrderModelList).then(res =>{
 
       // })
-      // debugger
-      this.OrderModelList.urlMethod = "update"
+      // 
+      // this.OrderModelList.urlMethod = "add"
+      
       this.$apiFun.addOrUpdateModel(this.OrderModelList).then(res => {
-            // debugger
+            // 
           })
     },
     openEdit(row, id) {
-      // debugger
+      // 
       this.dialogVisible = true;
       Object.keys(this.supplierList).forEach(item => {
-        // debugger;
+        // ;
         this.supplierList[item] = Array.isArray(row[item])
           ? row[item].map(t => ({ ...t }))
           : row[item] && typeof row[item] === "object"
           ? { ...row[item] }
           : row[item];
       });
-      debugger
+      
       this.selected = JSON.parse(this.supplierList.receivingAddress)
       // this.supplierList.receivingAddress = JSON.stringify(this.selected) 
       this.sumTotal = 0

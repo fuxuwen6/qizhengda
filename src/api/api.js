@@ -175,11 +175,11 @@ apiFun.addOrUpdateList = function(data) {
 
 //订单管理配送查询
 
-apiFun.queryOrderModel = function(cnumber) {
+apiFun.queryOrderModel = function(cnumber,orderId) {
   return Service({
     url: 'order/queryOrderModel',
     method: 'get',
-    params: { cnumber: cnumber}
+    params: { cnumber: cnumber,orderId:orderId}
     
   })
 }

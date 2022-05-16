@@ -65,7 +65,7 @@ export default {
         company: "", 
         companyName: "", 
         cpersons: "", 
-        ctimes: "", 
+        // ctimes: "", 
         docId: "", 
         email: "update", 
         idCard: "", 

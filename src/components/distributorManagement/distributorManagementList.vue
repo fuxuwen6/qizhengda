@@ -32,13 +32,13 @@
           width="100"
         ></el-table-column>
         <el-table-column prop="telPhone" align="center"  label="手机号"></el-table-column>
-        <el-table-column prop="status" align="center"  label="分销二维码"></el-table-column>
-         <el-table-column prop="status" align="center"  label="分销码"></el-table-column>
-         <el-table-column prop="status" align="center"  label="已提现"></el-table-column>
-         <el-table-column prop="status" align="center"  label="待提现"></el-table-column>
-         <el-table-column prop="status" align="center"  label="总收入"></el-table-column>
+        <el-table-column prop="qrCode" align="center"  label="分销二维码"></el-table-column>
+         <el-table-column prop="preCode" align="center"  label="分销码"></el-table-column>
+         <!-- <el-table-column prop="status" align="center"  label="已提现"></el-table-column>
+         <el-table-column prop="status" align="center"  label="待提现"></el-table-column> -->
+         <el-table-column prop="sumPrice" align="center"  label="总收入"></el-table-column>
          <el-table-column prop="status" align="center"  label="状态"></el-table-column>
-         <el-table-column prop="status" align="center"  label="绑定的下线"></el-table-column>
+         <el-table-column prop="downCount" align="center"  label="绑定的下线"></el-table-column>
         <el-table-column prop="address" label="操作" align="center" width="380">
           <template slot-scope="scope">
             <el-button type="text" @click="handleEdit(scope.$index, scope.row)"

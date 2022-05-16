@@ -36,7 +36,7 @@
             {{ scope.row.status ? "上架" : "下架" }}
           </template>
         </el-table-column>
-        <el-table-column prop="date" label="服务方式">
+        <!-- <el-table-column prop="date" label="服务方式">
           <template slot-scope="scope">
             <el-button @click="handleEdit(scope.$index, scope.row)"
               >服务上门</el-button
@@ -47,7 +47,7 @@
               >快递配送</el-button
             >
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="address" label="操作">
           <template slot-scope="scope">
             <el-button @click="handleEdit(scope.$index, scope.row)"
